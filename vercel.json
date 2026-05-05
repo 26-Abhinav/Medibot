@@ -1,0 +1,39 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "backend/server.js",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "www/**",
+      "use": "@vercel/static"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/chat",
+      "dest": "backend/server.js"
+    },
+    {
+      "src": "/analyze",
+      "dest": "backend/server.js"
+    },
+    {
+      "src": "/locations",
+      "dest": "backend/server.js"
+    },
+    {
+      "src": "/doctors",
+      "dest": "backend/server.js"
+    },
+    {
+      "src": "/config",
+      "dest": "backend/server.js"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "www/$1"
+    }
+  ]
+}

@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+  <title>MediChat Assistant</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@400;600;700&display=swap"
+    rel="stylesheet">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+</head>
+
+<body>
+
+  <!-- SPLASH SCREEN -->
+  <div id="splash">
+    <img src="logo.png" class="splash-logo">
+    <h1>Medibot</h1>
+    <p>Your AI Healthcare Assistant</p>
+  </div>
+
+  <!-- LOGIN PAGE -->
+  <div id="loginPage" class="login">
+
+    <div class="logo-box">
+      <img src="logo.png" class="login-logo">
+    </div>
+
+    <!-- LOGIN FORM -->
+    <div id="loginBox">
+
+      <h2>MediBot Login</h2>
+
+      <input id="email" type="email" placeholder="Email">
+      <input id="password" type="password" placeholder="Password">
+
+      <button onclick="login()">Login</button>
+
+      <p class="switch">
+        <span onclick="forgotPassword()">Forgot Password?</span>
+      </p>
+
+      <p class="switch">
+        Don't have an account?
+        <span onclick="showSignup()">Sign Up</span>
+      </p>
+
+    </div>
+
+    <!-- SIGNUP FORM -->
+    <div id="signupBox" style="display:none;">
+
+      <h2>Create Account</h2>
+
+      <input id="name" placeholder="Full Name">
+      <input id="signupEmail" type="email" placeholder="Email">
+      <input id="signupPassword" type="password" placeholder="Password">
+
+      <button onclick="signup()">Register</button>
+
+      <p class="switch">
+        Already have an account?
+        <span onclick="showLogin()">Login</span>
+      </p>
+
+    </div>
+
+    <div class="divider">OR</div>
+
+    <button class="google" onclick="googleLogin()">
+      <i class="fa-brands fa-google"></i> Continue with Google
+    </button>
+
+  </div>
+
+  <!-- CHAT APP -->
+  <div id="chatApp" class="app">
+
+    <div class="header">
+      <div class="header-top">
+        <img src="logo.png" class="chat-logo">
+        <div class="title">
+          <b>Medibot</b>
+          <span data-i18n="appSubtitle">Your Healthcare Assistant</span>
+        </div>
+        <div class="lang-wrapper" style="margin-left: auto; display: flex; gap: 10px; align-items: center;">
+            <select id="langSelect" onchange="updateLanguage()" class="lang-selector" style="background: transparent; border: 1px solid #e1efff; color: var(--primary-dark); font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; padding: 6px 10px; border-radius: 12px; font-size: 13px; outline: none;">
+              <option value="English">English</option>
+              <option value="Hindi">हिंदी (Hindi)</option>
+              <option value="Marathi">मराठी (Marathi)</option>
+              <option value="Bengali">বাংলা (Bengali)</option>
+              <option value="Tamil">தமிழ் (Tamil)</option>
+              <option value="Telugu">తెలుగు (Telugu)</option>
+              <option value="Haryanvi">हरियाणवी (Haryanvi)</option>
+              <option value="Punjabi">ਪੰਜਾਬੀ (Punjabi)</option>
+              <option value="Gujarati">ગુજરાતી (Gujarati)</option>
+            </select>
+            <button class="emergency" style="margin-left: 0;">
+              <i class="fa-solid fa-phone"></i> <span data-i18n="emergency">Emergency</span>
+            </button>
+        </div>
+      </div>
+
+      <div class="header-bottom">
+        <div class="city-selector">
+          <i class="fa-solid fa-map"></i>
+          <select id="stateSelect" onchange="updateState()">
+            <option value="">Select State</option>
+          </select>
+        </div>
+
+        <div class="city-selector">
+          <i class="fa-solid fa-location-dot"></i>
+          <select id="citySelect" onchange="updateCity()">
+            <option value="">Select City</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div id="chat" class="chat">
+      <!-- Chat messages will be loaded dynamically -->
+    </div>
+
+    <div class="upload-area">
+
+      <div class="upload-row">
+        <div class="file-input-wrapper">
+          <input type="file" id="reportFile" accept=".pdf,image/*">
+          <label for="reportFile" class="file-label">
+            <i class="fa-solid fa-file-arrow-up"></i> Select Report
+          </label>
+        </div>
+
+        <input type="file" id="cameraFile" accept="image/*" capture="environment" style="display: none;"
+          onchange="handleCameraUpload()">
+        <button class="camera-btn" onclick="document.getElementById('cameraFile').click()" title="Take Photo">
+          <i class="fa-solid fa-camera"></i>
+        </button>
+      </div>
+
+      <div class="upload-row">
+        <input type="text" id="reportQuery" placeholder="Ask a question about the document (optional)..." data-i18n-placeholder="typeQuestion">
+      </div>
+      <div class="upload-row" style="justify-content: flex-end; margin-top: 5px;">
+        <button class="analyze-btn" onclick="analyzeReport(null, 'prescription')" style="background: var(--primary)">
+          <i class="fa-solid fa-pills"></i> <span data-i18n="readPrescription">Read Prescription</span>
+        </button>
+        <button class="analyze-btn" onclick="analyzeReport()">
+          <i class="fa-solid fa-microscope"></i> <span data-i18n="analyzeReport">Analyze Report</span>
+        </button>
+      </div>
+
+    </div>
+
+    <div class="input-area">
+      <input id="msg" placeholder="Type your message..." data-i18n-placeholder="typeMessage">
+      <button onclick="send()">
+        <i class="fa-solid fa-paper-plane"></i>
+      </button>
+    </div>
+
+  </div>
+
+  <!-- FIREBASE -->
+  <script type="module">
+
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { getFirestore, collection, addDoc, getDocs, query, where, orderBy }
+      from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyA2cSiRbvZlr6cB9wbgkh50qhUXFqrf8_k",
+      authDomain: "medibot-ba99d.firebaseapp.com",
+      projectId: "medibot-ba99d",
+      storageBucket: "medibot-ba99d.firebasestorage.app",
+      messagingSenderId: "976302471301",
+      appId: "1:976302471301:web:a80b8bc9d611ade86dd1ec",
+      measurementId: "G-1MR78G71F5"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    window.db = db;
+    window.addDoc = addDoc;
+    window.collection = collection;
+    window.getDocs = getDocs;
+    window.query = query;
+    window.where = where;
+    window.orderBy = orderBy;
+    window.createUser = createUserWithEmailAndPassword;
+    window.signInUser = signInWithEmailAndPassword;
+    window.auth = auth;
+    window.resetPassword = sendPasswordResetEmail;
+
+    /* GOOGLE LOGIN */
+    window.googleLogin = function () {
+
+      const provider = new GoogleAuthProvider();
+
+      signInWithPopup(auth, provider)
+        .then((result) => {
+
+          const user = result.user;
+          window.currentUser = user;
+
+          alert("Welcome " + user.displayName);
+
+          // open chat
+          document.getElementById("loginPage").style.display = "none";
+          document.getElementById("chatApp").style.display = "flex";
+          if (window.loadChatHistory) window.loadChatHistory();
+
+        })
+        .catch((error) => {
+          alert(error.message);
+        });
+
+    }
+
+  </script>
+
+  <!-- MAIN SCRIPT -->
+  <script src="script.js"></script>
+
+</body>
+
+</html>
